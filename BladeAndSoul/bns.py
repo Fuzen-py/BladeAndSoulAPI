@@ -48,17 +48,6 @@ def _math(var1, var2, string=True, percent=False):
     return var1, var2, var1-var2
 
 
-
-async def search_user(user, suggest=True, max_count=3) -> list:
-    soup = await fetch_url(SEARCH_URL, params={'c': user})
-    search = soup.find('div', class_='searchList')
-    if suggest:
-        return [(x.dl.dt.a.text, [b.text for b in x.dl.find('dd', class_='other').dd.find_all('li')]) for x in
-                search.find_all('li') if x.dt is not None][:max_count]
-    return (search.li.dl.dt.a.text,
-            [x.text for x in search.li.dl.find('dd', class_='other').dd.find_all('li') if x is not None])
-
-
 def get_name(gear_item):
     try:
         gear_item = gear_item.find('div', class_='name')
@@ -80,6 +69,15 @@ async def fetch_url(url, params={}) -> BeautifulSoup:
     async with aiohttp.ClientSession() as session:
         async with session.get(url, params=params) as re:
             return BeautifulSoup(await re.text(), parser)
+
+async def search_user(user, suggest=True, max_count=3) -> list:
+    soup = await fetch_url(SEARCH_URL, params={'c': user})
+    search = soup.find('div', class_='searchList')
+    if suggest:
+        return [(x.dl.dt.a.text, [b.text for b in x.dl.find('dd', class_='other').dd.find_all('li')]) for x in
+                search.find_all('li') if x.dt is not None][:max_count]
+    return (search.li.dl.dt.a.text,
+            [x.text for x in search.li.dl.find('dd', class_='other').dd.find_all('li') if x is not None])
 
 
 async def fetch_profile(user) -> dict:
@@ -196,9 +194,6 @@ async def fetch_profile(user) -> dict:
     r['Stats'].update(Defense)
     return r
 
-
-def suggest_chars(search: BeautifulSoup) -> list:
-    x = [x.dt.a.text for x in search.ul.find_all('li') if x is not None or x.dt is not None]
 
 
 class Character:

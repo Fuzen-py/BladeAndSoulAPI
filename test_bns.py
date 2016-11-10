@@ -12,6 +12,4 @@ async def func(name):
     await c.refresh()
 
 def test_mytest():
-    loop.run_until_complete(func('Bob'))
-    sleep(2)
-    loop.run_until_complete(func('Joe'))
+    loop.run_until_complete(func('Yui'))
