@@ -8,7 +8,7 @@ setup(
         'BladeAndSoul': ['data/*']},
     license='MIT',
     author='Fuzen.py',
-    description='Python3.5 Unofical BladeAndSoul API',
+    description='Python3.5 Unofficial BladeAndSoul API',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
