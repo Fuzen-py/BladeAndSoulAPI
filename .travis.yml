@@ -2,6 +2,7 @@ language: python
 python:
   - "3.5"
 install:
+  - pip install pytest
   - pip install -r requirements.txt
   - pip install .
-script: pytest -q test_bns.py
+script: pytest test_bns.py
