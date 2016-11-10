@@ -1,0 +1,131 @@
+Awakened Blight B:
+  fee: 30 Copper
+  items: [The Blight Fang x 5]
+  weapon: Corrupted {0}
+Awakened Blight T:
+  fee: 90 Copper
+  items:
+      - Cinderlands Transformation Stone x 1
+  weapon: Golden Deva {0}
+Awakened Breeze B:
+  fee: 8 Gold, 20 Silver
+  items:
+     - Hae Mujin's Machismo x 9
+     - Soulstone x 21
+     - Moonstone x 5
+     - Silverfrost Mountains
+     - Dew x 20
+  weapon: Frosty {0}
+Awakened Breeze T:
+  fee: 47 Gold
+  items:
+     - Silverfrost Transformation Stone x 12
+     - Soulstone x 280, Moonstone x 90,
+     - Frozen Stinger x 240
+     - Naryu Tablet x 7
+  weapon: Yeti {0}
+Awakened Infernal B:
+  fee: 44 Silver
+  items:
+      - Infernal Lord's Horn x 11
+  weapon: Lycan {0}
+Awakened Infernal T:
+  fee: 2 Gold, 50 Silver
+  items:
+      - [Moonwater Transformation Stone x 1]
+  weapon: Hujikar {0}
+Awakened Oathbreaker B:
+  fee: 4 Gold, 90 Silver
+  items: [Poharans's Gun Oil x 10, Soulstone x 18, Silverfrost Mountains Dew x 10]
+  weapon: Wind {0}
+Awakened Oathbreaker T:
+  fee: 34 Gold
+  items: [Moonwater Transformation Stone x 12, Soulstone x 190, Silverfrost Mountains
+      Dew x 50]
+  weapon: Stormbringer {0}
+Awakened Profane B:
+  fee: 1 Gold, 70 Silver
+  items: [Infernal Lord's Horn x 10]
+  weapon: Dokumo {0}
+Awakened Profane T:
+  fee: 2 Gold, 90 Silver
+  items: [Moonwater Transformation Stone x 1]
+  weapon: Forgotten Brightstone {0}
+Awakened Scorpio B:
+  fee: 14 Gold
+  items: [Moonstone x 20, Soulstone x 60, Frozen Stinger x 90]
+  weapon: Frostscale {0}
+Awakened Scorpio T:
+  fee: 75 Gold
+  items: [Silverfrost Transformation Stone x 19, Soulstone x 430, Frozen Stinger x
+      350, Moonstone x 130, Naryu Tablet x 20]
+  weapon: Asura {0}
+Hongmoon B:
+  fee: 2 Copper
+  items: [Viridian Poison x 1]
+  weapon: Stalker {0}
+Hongmoon T:
+  fee: 30 Copper
+  items: [Viridian Transformation Stone x 1]
+  weapon: Blight {0}
+Oathbreaker B:
+  fee: 4 Gold
+  items: [Poharan's Gun Oil x 13, Soulstone x 15, Silverfrost Mountains Dew x 3]
+  weapon: Fiend {0}
+Oathbreaker T:
+  fee: 31 Gold
+  items: [Moonwater Transformation Stone x 11, Soulstone x 180, Silverfrost Mountains
+      Dew x 15]
+  weapon: Silverfrost {0}
+True Blight B:
+  fee: 40 Copper
+  items: [The Blight Fang x 5]
+  weapon: Cinderlands Baotite {0}
+True Blight T:
+  fee: 1 Silver
+  items: [Cinderlands Transformation Stone x 1]
+  weapon: Infernal {0}
+True Breeze B:
+  fee: 10 Gold
+  items: [Moonstone x 15, Soulstone x 50, Frozen Stinger x 70]
+  weapon: King {0}
+True Breeze T:
+  fee: 63 Gold
+  items: [Silverfrost Transformation Stone x 16, Soulstone x 360, Frozen Stinger x
+      290, Moonstone x 110, Naryu Tablet x 15]
+  weapon: Scorpio {0}
+True Infernal B:
+  fee: 1 Gold, 30 Silver
+  items: [Infernal Lord's Horn x 17]
+  weapon: Imperator {0}
+True Infernal T:
+  fee: 2 Gold 80 Silver
+  items: [Moonwater Transformation Stone x 1]
+  weapon: Profane {0}
+True Oathbreaker B:
+  fee: 6 Gold, 20 silver
+  items: [Hae Mujin's Machismo x 9, Soulstone x 16, Moonstone x 4, Silverfrost Mountains
+      Dew x 15]
+  weapon: Primal {0}
+True Oathbreaker T:
+  fee: 37 Gold
+  items: [Silverfrost Transformation Stone x 6, Soulstone x 120, Moonstone x 29, Silverfrost
+      Mountains Dew x 60]
+  weapon: Breeze {0}
+True Profane B:
+  fee: 1 Gold 70 Silver
+  items: [Infernal Lord's Horn x 20]
+  weapon: Moonwater Baotite {0}
+True Profane T:
+  fee: 6 Gold
+  items: [Moonwater Transformation Stone x 2, Soulstone x40]
+  weapon: Skypetal {0}
+True Scorpio B:
+  fee: 17 Gold
+  items: [Moonstone x 24, Soulstone x 80, Frozen Stinger x 110]
+  weapon: Alpine {0}
+True Scorpio T:
+  fee: 100 Gold
+  items: [Silverfrost Premium Transfermation Stone x 3, Silverfrost Transformation
+      Stone x 25, Frozen Stinger x 410, Moonstone x 180, Flower of Lament x 10]
+  weapon: Ice {0} or Soulstone {0}
