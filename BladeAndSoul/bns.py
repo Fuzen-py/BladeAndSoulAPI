@@ -337,12 +337,3 @@ async def compare(user1: Character, user2: Character, update=False):
                                              user2['Accuracy']['Total'])),
                  '+']
     return '\n'.join(send_this)
-
-
-if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    u1 = loop.run_until_complete(get_character('Thu'))
-    u2 = loop.run_until_complete(get_character('Project Yun'))
-    print(u1.pretty_profile())
-    print('-----------------------------------------------------\n')
-    print(loop.run_until_complete(compare(u1, u2)))
