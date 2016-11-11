@@ -21,6 +21,9 @@ SEARCH_URL = 'http://na-bns.ncsoft.com/ingame/bs/character/search/info'  # ?c=Ch
 SUGGEST_URL = 'http://na-search.ncsoft.com/openapi/suggest.jsp'  # ?site=bns&display=10&collection=bnsusersuggest&query=char
 
 def _float(var):
+    """
+    Attempts to an entry to a float (normally works for this)
+    """
     if var in [None, False]:
         return 0
     if var is True:
@@ -39,6 +42,9 @@ def _float(var):
     return float(var)
 
 def _math(var1, var2, string=True, percent=False):
+    """
+    Visually do math
+    """
     if string:
         if percent:
             return '{}% - {}% = {}%'.format(var1, var2, var1-var2)
@@ -49,6 +55,9 @@ def _math(var1, var2, string=True, percent=False):
 
 
 def get_name(gear_item):
+    """
+    A helper function for extracting names
+    """
     try:
         gear_item = gear_item.find('div', class_='name')
         if not gear_item:
@@ -61,11 +70,17 @@ def get_name(gear_item):
 
 
 def set_bonus(set_) -> tuple:
+    """
+    returns the set bonus for a user as a generator
+    """
     return (':\n'.join(('\n'.join((t.strip() for t in z.text.strip().split('\n') if t.strip() != '')) for z in x)) for x
             in dict(zip(set_.find_all('p', class_='discription'), set_.find_all('p', class_='setEffect'))).items())
 
 
-async def fetch_url(url, params={}) -> BeautifulSoup:
+async def fetch_url(url, params={}):
+    """
+    Fetch a url and return soup
+    """
     async with aiohttp.ClientSession() as session:
         async with session.get(url, params=params) as re:
             return BeautifulSoup(await re.text(), parser)
@@ -81,6 +96,27 @@ async def search_user(user, suggest=True, max_count=3) -> list:
 
 
 async def fetch_profile(user) -> dict:
+    """
+    Fetches a user and returns the data as a dict
+
+    Dictionary Keys:
+    Account Name - The display name for their account (str).
+    Character Name - The Name of the given character (str).
+    Level - Character's level (str).
+    HM Level - Character's HM level (str).
+    Server - Server the character is on (str).
+    Faction - The Faction the character is in (str).
+    Picture - Link to the character's profile picture (str).
+    Stats - A dictionary object with stats (each stat is also a dict).
+    Gear - The gear of the Given Character (list).
+    SoulSheild - SoulSheild stats (str).
+    Set Bonus - Set bonus affects, a list of strings (list).
+    Outfit - The outfit of the character (dict).
+    Other Characters - A list of the other characters on that user's account (list).
+    Region - The region the user is from.
+
+    :parm user: The name of the character you wish to fetch data for
+    """
     CharacterName, other_chars = await search_user(user, suggest=False)
     soup = await fetch_url(PROFILE_URL, params={'c': CharacterName})
     # INFORMATION
@@ -189,24 +225,52 @@ async def fetch_profile(user) -> dict:
                        'Head': Head,
                        'Face': Face,
                        'Adornment': Adornment},
-            'Other Characters': other_chars}
+            'Other Characters': other_chars,
+            'Region': 'NA'}
     r['Stats'].update(ATK)
     r['Stats'].update(Defense)
     return r
 
 
 
-class Character:
+class Character(object):
+    """
+    Character Object
+
+    pretty_profile - Return A prettied profile Overview as a string.
+    pretty_gear - Return a prettied Gear Overview as a string.
+    pretty_stats - Return a prettied Stats Overview as a string.
+    pretty_outfit - Return a prettied Outfit Overview as a string.
+    Notice: The Following items can be used as self.item with space replaced with "_" and it is not case sensitive.
+    Notice: The Following items can also be used as self[item] it is case sensitive, no replacement.
+    Account Name - The display name for their account (str).
+    Character Name - The Name of the given character (str).
+    Level - Character's level (str).
+    HM Level - Character's HM level (str).
+    Server - Server the character is on (str).
+    Faction - The Faction the character is in (str).
+    Picture - Link to the character's profile picture (str).
+    Stats - A dictionary object with stats (each stat is also a dict).
+    Gear - The gear of the Given Character (list).
+    SoulSheild - SoulSheild stats (str).
+    Set Bonus - Set bonus affects, a list of strings (list).
+    Outfit - The outfit of the character (dict).
+    Other Characters - A list of the other characters on that user's account (list).
+    Region - The region the user is from.
+    """
     def __init__(self, data: dict):
         data = data.copy()
         self.__name__ = data['Character Name']
         self.__data = data
-        self.stats
+        self.items = self.__data.items
+        self.keys = self.__data.keys
         self.name = __name__
         self.account = data['Account Name']
 
     async def refresh(self):
         self.__data = await fetch_profile(self.__name__)
+        self.items = self.__data.items
+        self.keys = self.__data.keys
 
     def __getattr__(self, item):
         return self[str(item)]
@@ -215,9 +279,13 @@ class Character:
         item = str(item).replace('_', ' ')
         k = list(self.__data.keys())
         k = dict(zip([z.lower() for z in k], k))
-        return self.__data[k.get(item.lower())]
+        try:
+            return self.__data[k.get(item.lower())]
+        except KeyError:
+            return self.__data[k.get(item.lower().replace(' ', '_'))]
 
     def pretty_profile(self):
+        """Return A prettyfied profile Overview as a string"""
         if self['HM Level']:
             temp = 'Level {} Hongmoon Level {}'.format(self['Level'], self['HM Level'])
         else:
@@ -242,6 +310,7 @@ class Character:
         return '\n'.join(text).strip()
 
     def pretty_gear(self):
+        """Return a prettyfied Gear Overview as a string"""
         temp = [self['Character Name'], '[' + self['Class'],'Level', str(self['Level'])]
         if self['HM Level']:
             temp += ['Hongmoon Level', str(self['HM Level'])]
@@ -261,7 +330,7 @@ class Character:
         return '\n'.join(send_this).strip()
 
     def pretty_stats(self):
-
+        """Return a prettyfied Outfit Overview as a string"""
         temp = [self['Character Name'], '[' + self['Class'] + ',','Level', str(self['Level'])]
         if self['HM Level']:
             temp += ['Hongmoon Level', str(self['HM Level'])]
@@ -290,6 +359,7 @@ class Character:
         return '\n'.join(send_this)
 
     def pretty_outfit(self):
+        """Return a prettyfied Outfit Overview as a string"""
         outfit = self['Outfit']
         o = list(outfit.keys())
         o.sort()
@@ -297,9 +367,16 @@ class Character:
                          ['{}: {}'.format(k, outfit[k]) for k in o] + ['```'])
 
 async def get_character(user: str) -> Character:
+    """
+    Return a Character Object for the given user.
+
+    :param user: The user to create an object for
+    :return: Returns A Character Object for the given user
+    """
     return Character(await fetch_profile(user))
 
 async def compare(user1: Character, user2: Character, update=False):
+    """A WIP compare fucntion."""
     assert isinstance(user1, Character) and isinstance(user2, Character)
     if update:
         await user1.refresh()

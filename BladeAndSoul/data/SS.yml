@@ -1,0 +1,64 @@
+# Source
+# https://docs.google.com/spreadsheets/d/1JOQK34BUTR_55XwnbJOk388gjokrtLZFdhi3vIwXjZc/edit#gid=2077358310
+Elder:
+    Set Effect:
+        3 Set: Class Specific
+        5 Set: HP 15510, ACC 165, DEF 298
+        8 Set: Class Specific
+    '1':
+        HP1: '2880-5550'
+        Main Name: cDef
+        Main: '284-406'
+        Sub Name: HP, ACC, DEF
+        Sub: '122-174'
+        Sub HP: '1590-2260'
+        Fusion: '290'
+        Fusion HP: '2680'
+    '2':
+        HP1: '4070-5810'
+        Main Name: HP2
+        Main: '3890-5530'
+        Sub Name: ACC, DEF, cDef
+        Sub: '127-182'
+        Fusion: '304'
+        Fusion HP: '3040'
+
+Yuran:
+    Set Effect:
+        3 Set: 820 HP2
+        5 Set: 248 DEF
+        8 Set: 3470 HP2, 148 EVA
+    '1':
+        HP1: '3850-5510'
+        cRate: '75-94'
+        ACC: '75-94'
+        DEF: '75-94'
+        Fusion: '157'
+        Fusion HP: '1570'
+        Fusion %: '2%'
+    '2':
+        HP1: '2440-3480'
+        cRate: '161-230'
+        ACC: '78-90'
+        DEF: '78-98'
+        BLK: '78-98'
+        Fusion: '164'
+        Fusion HP: '1640'
+        Fusion %: '2%'
+    '3':
+        HP1: '4230-6050'
+        DEF: '81-102'
+        EVA: '81-102'
+        BLK: '81-102'
+        Fusion: '172'
+        Fusion HP: '1720'
+        Fusion %: '3%'
+    '4':
+        HP1: '2660-3800'
+        cRate: '85-107'
+        ACC: '175-251'
+        EVA: '85-107'
+        BLK: '85-107'
+        Fusion: '179'
+        Fusion HP: '1790'
+        Fusion %: '3%'
