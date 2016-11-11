@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='BladeAndSoul',
+    name='BladeAndSoul.py',
     version='0.0.1a0',
     packages=['BladeAndSoul'],
     package_data = {
@@ -17,7 +17,7 @@ setup(
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
-    keywords='BladeAndSoul API Unofical',
-    install_requires=['aiohttp', 'bs4', 'lxml'],
+    keywords='Unofficial BladeAndSoul API',
+    install_requires=['aiohttp', 'bs4', 'lxml', 'PyYaml'],
     zip_safe=False
 )

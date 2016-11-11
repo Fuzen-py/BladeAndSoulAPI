@@ -8,8 +8,6 @@ async def func(name):
     c.pretty_gear()
     c.pretty_outfit()
     c.pretty_stats()
-    await asyncio.sleep(2)
-    await c.refresh()
 
 def test_mytest():
     loop.run_until_complete(func('Yui'))
