@@ -1,6 +1,7 @@
 import asyncio; loop = asyncio.get_event_loop()
 from time import sleep
 from BladeAndSoul import character
+from BladeAndSoul.errors import CharacterNotFound, ServiceUnavialable
 async def func(name):
     c = await character(name)
     assert isinstance(c.Stats, dict)
@@ -10,4 +11,12 @@ async def func(name):
     c.pretty_stats()
 
 def test_mytest():
-    loop.run_until_complete(func('Yui'))
+    try:
+        loop.run_until_complete(func('Yui'))
+    except ServiceUnavialable:
+        pass
+    except CharacterNotFound:
+        try:
+            loop.run_until_complete(func('Joe'))
+        except ServiceUnavialable:
+            pass

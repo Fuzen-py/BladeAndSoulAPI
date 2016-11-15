@@ -1,17 +1,14 @@
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
-
-# Todo: Create Custom Exceptions
-
+from .errors import (FailedToParse, CharacterNotFound, ServiceUnavialable,
+                    InvalidData)
 try:
     import lxml
     parser = 'lxml'
-
 except ImportError:
     parser = 'html.parser'
 
-# Todo: Blade and soul Class remodel
 # types of weapons in game
 VALID_WEAPONS = ['dagger', 'sword', 'staff', 'razor', 'axe', 'bangle', 'gauntlet', 'lynblade', 'bracer']
 # types of accessories in game
@@ -53,7 +50,6 @@ def _math(var1, var2, string=True, percent=False):
         return str(var1) + '%', str(var2) + '%', str(var1-var2) + '%'
     return var1, var2, var1-var2
 
-
 def get_name(gear_item):
     """
     A helper function for extracting names
@@ -68,14 +64,12 @@ def get_name(gear_item):
     except AttributeError:
         return None
 
-
 def set_bonus(set_) -> tuple:
     """
     returns the set bonus for a user as a generator
     """
     return (':\n'.join(('\n'.join((t.strip() for t in z.text.strip().split('\n') if t.strip() != '')) for z in x)) for x
             in dict(zip(set_.find_all('p', class_='discription'), set_.find_all('p', class_='setEffect'))).items())
-
 
 async def fetch_url(url, params={}):
     """
@@ -93,7 +87,6 @@ async def search_user(user, suggest=True, max_count=3) -> list:
                 search.find_all('li') if x.dt is not None][:max_count]
     return (search.li.dl.dt.a.text,
             [x.text for x in search.li.dl.find('dd', class_='other').dd.find_all('li') if x is not None])
-
 
 async def fetch_profile(user) -> dict:
     """
@@ -119,6 +112,8 @@ async def fetch_profile(user) -> dict:
     """
     CharacterName, other_chars = await search_user(user, suggest=False)
     soup = await fetch_url(PROFILE_URL, params={'c': CharacterName})
+    if len(soup.find_all('div', clas_='pCharacter error', id='container')):
+        raise ServiceUnavialable('Cannot Access BNS At this time')
     # INFORMATION
     Name = soup.find('a', href='#').text
     CharacterName = soup.find('dt').span.text[1:-1]
@@ -231,8 +226,6 @@ async def fetch_profile(user) -> dict:
     r['Stats'].update(Defense)
     return r
 
-
-
 class Character(object):
     """
     Character Object
@@ -260,17 +253,22 @@ class Character(object):
     """
     def __init__(self, data: dict):
         data = data.copy()
-        self.__name__ = data['Character Name']
+        self.name = data['Character Name']
         self.__data = data
         self.items = self.__data.items
         self.keys = self.__data.keys
-        self.name = __name__
         self.account = data['Account Name']
 
     async def refresh(self):
-        self.__data = await fetch_profile(self.__name__)
+        self.__data = await fetch_profile(self.name)
         self.items = self.__data.items
         self.keys = self.__data.keys
+
+    def __call__(self):
+        """returns an awaitable to refresh"""
+        return self.refresh()
+
+
 
     def __getattr__(self, item):
         return self[str(item)]
@@ -373,7 +371,15 @@ async def get_character(user: str) -> Character:
     :param user: The user to create an object for
     :return: Returns A Character Object for the given user
     """
-    return Character(await fetch_profile(user))
+    if not isinstance(user, str):
+        raise InvalidData('Expected type str for user, found {} instead'.format(type(user).__name__))
+    try:
+        return Character(await fetch_profile(user))
+    except AttributeError:
+        raise CharacterNotFound('Failed to find character "{}"'.format(user))
+    except Exception as e:
+        print('[!] Error:', e)
+        raise Exception(e)
 
 async def compare(user1: Character, user2: Character, update=False):
     """A WIP compare fucntion."""
