@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='BladeAndSoul.py',
-    version='0.0.2a1',
+    version='0.0.2a2',
     packages=['BladeAndSoul'],
     package_data = {
         'BladeAndSoul': ['data/*']},

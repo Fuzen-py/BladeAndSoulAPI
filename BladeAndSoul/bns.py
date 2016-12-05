@@ -432,9 +432,9 @@ def avg_dmg(attack_power: str, critical_rate: str, critical_damage: str, element
     :param critical_damage: Critical Damage (Total)
     :param elemental_bonus: Total elemental_bonus% - 500
     """
-    attack_power = float(stats['Attack Power']['Total'])
-    crit_rate = float(stats['Critical Hit']['Critical Rate'].strip(' %'))
-    crit_damage = float(stats['Critical Damage']['Total'])
+    attack_power = float(attack_power)
+    crit_rate = float(critical_rate.strip(' %'))
+    crit_damage = float(critical_damage)
     elemental_bonus = float(elemental_bonus.strip(' %'))
 
     # Result is No Blue Buff
