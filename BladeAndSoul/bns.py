@@ -439,8 +439,11 @@ def avg_dmg(attack_power: str, critical_rate: str, critical_damage: str, element
 
     # Result is No Blue Buff
     # Result 2 is with Blue Buff
-    result = attack_power * (1-(attack_power * 0.01) + (crit_rate * crit_damage * 0.001))
-    result2 = attack_power * (1 - ((crit_rate + 50) * 0.01) + (crit_rate + 50) * (crit_damage + 40) * .0001) if (attack_power < 60) else attack_power * ((crit_damage + 40) * .01)
+    result = attack_power * (1 - (crit_rate * 0.01) + (crit_rate * crit_damage * 0.001))
+    if (crit_rate < 60):
+        result2 = attack_power * (1 - ((crit_rate + 50) * 0.01) + (crit_rate + 50) * (crit_damage + 40) * .0001)
+    else:
+        result2 = attack_power * ((crit_damage + 40) * .01)
     if elemental_bonus in [0, 100]:
         return round(result, 2), round(result2, 2)
     result *= (elemental_bonus * 0.01)
