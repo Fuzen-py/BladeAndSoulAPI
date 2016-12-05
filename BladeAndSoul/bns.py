@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
 from .errors import (FailedToParse, CharacterNotFound, ServiceUnavialable,
-                    InvalidData)
+                     InvalidData)
 try:
     import lxml
     parser = 'lxml'
@@ -28,7 +28,7 @@ def _float(var):
     if isinstance(var, float):
         return var
     if isinstance(var, int):
-        return float(int)
+        return float(var)
     assert isinstance(var, str)
     assert any(x.isnumeric() for x in var)
     var = var.split()[-1]
