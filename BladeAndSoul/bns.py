@@ -38,7 +38,7 @@ def _float(var):
         var = var[1:]
     return float(var)
 
-def _math(var1, var2, string=True, percent=False):
+def _subtract(var1, var2, string=True, percent=False):
     """
     Visually do math
     """
@@ -364,6 +364,13 @@ class Character(object):
         return '\n'.join(['```'] + ['{}\'s Outfit:'.format(self['Character Name'])] +
                          ['{}: {}'.format(k, outfit[k]) for k in o] + ['```'])
 
+    def avg_dmg(self):
+        stats = self['Stats']
+        return avg_dmg(stats['Attack Power']['Total'],
+                       stats['Critical Hit']['Critical Rate'],
+                       stats['Critical Damage']['Total'],
+                       elemental_bonus='100%')
+
 async def get_character(user: str) -> Character:
     """
     Return a Character Object for the given user.
@@ -401,17 +408,41 @@ async def compare(user1: Character, user2: Character, update=False):
             v[k2] = _float(v2)
         user2[k] = v
 
-    send_this = [temp, divider, 'HP: {}'.format(_math(user1['HP']['Total'], user2['HP']['Total'])),
-                 'Attack Power: {}'.format(_math(user1['Attack Power']['Total'],
+    send_this = [temp, divider, 'HP: {}'.format(_subtract(user1['HP']['Total'], user2['HP']['Total'])),
+                 'Attack Power: {}'.format(_subtract(user1['Attack Power']['Total'],
                                                  user2['Attack Power']['Total'])),
-                 'Piercing: {}'.format(_math(user1['Piercing']['Total'], user2['Piercing']['Total'])),
-                 '+Defense Piercing: {}'.format(_math(user1['Piercing']['Defense Piercing'],
+                 'Piercing: {}'.format(_subtract(user1['Piercing']['Total'], user2['Piercing']['Total'])),
+                 '+Defense Piercing: {}'.format(_subtract(user1['Piercing']['Defense Piercing'],
                                                       user2['Piercing']['Defense Piercing'],
                                                       percent=True)),
-                 '+Block Piercing: {}'.format(_math(user1['Piercing']['Block Piercing'],
+                 '+Block Piercing: {}'.format(_subtract(user1['Piercing']['Block Piercing'],
                                                     user2['Piercing']['Block Piercing'],
                                                     percent=True)),
-                 'Accuracy: {}'.format(_math(user1['Accuracy']['Total'],
+                 'Accuracy: {}'.format(_subtract(user1['Accuracy']['Total'],
                                              user2['Accuracy']['Total'])),
                  '+']
     return '\n'.join(send_this)
+
+def avg_dmg(attack_power: str, critical_rate: str, critical_damage: str, elemental_bonus: str='100%'):
+    """
+    AVG Damage
+    Calculates The Average Damage
+    :param attack_power: Attack Power (Total)
+    :param critical_hit_rate: Critical Hit -> Critical Rate
+    :param critical_damage: Critical Damage (Total)
+    :param elemental_bonus: Total elemental_bonus% - 500
+    """
+    attack_power = float(stats['Attack Power']['Total'])
+    crit_rate = float(stats['Critical Hit']['Critical Rate'].strip(' %'))
+    crit_damage = float(stats['Critical Damage']['Total'])
+    elemental_bonus = float(elemental_bonus.strip(' %'))
+
+    # Result is No Blue Buff
+    # Result 2 is with Blue Buff
+    result = attack_power * (1-(attack_power * 0.01) + (crit_rate * crit_damage * 0.001))
+    result2 = attack_power * (1 - ((crit_rate + 50) * 0.01) + (crit_rate + 50) * (crit_damage + 40) * .0001) if (attack_power < 60) else attack_power * ((crit_damage + 40) * .01)
+    if elemental_bonus in [0, 100]:
+        return round(result, 2), round(result2, 2)
+    result *= (elemental_bonus * 0.01)
+    result2 *= (elemental_bonus * 0.01)
+    return round(result, 2), round(result2, 2)
