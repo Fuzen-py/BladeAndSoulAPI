@@ -1,13 +1,18 @@
 import asyncio
+import json
+
 import aiohttp
 from bs4 import BeautifulSoup
-from .errors import (FailedToParse, CharacterNotFound, ServiceUnavialable,
-                     InvalidData)
+
+from .errors import (CharacterNotFound, FailedToParse, InvalidData,
+                     ServiceUnavialable)
+
 try:
     import lxml
     parser = 'lxml'
 except ImportError:
     parser = 'html.parser'
+
 
 # types of weapons in game
 VALID_WEAPONS = ['dagger', 'sword', 'staff', 'razor', 'axe', 'bangle', 'gauntlet', 'lynblade', 'bracer']
@@ -16,6 +21,11 @@ VALID_ACCESSORIES = ['necklace', 'earring', 'bracelet', 'ring', 'belt', 'energy'
 PROFILE_URL = 'http://na-bns.ncsoft.com/ingame/bs/character/profile'  # ?c=Char
 SEARCH_URL = 'http://na-bns.ncsoft.com/ingame/bs/character/search/info'  # ?c=Char
 SUGGEST_URL = 'http://na-search.ncsoft.com/openapi/suggest.jsp'  # ?site=bns&display=10&collection=bnsusersuggest&query=char
+MARKET_API_ENDPOINT = 'http://na.bnsbazaar.com/api/market' # ITEM NAME
+ITEM_NAME_SUGGEST = 'http://na-search.ncsoft.com/openapi/bnsmarketsuggest.jsp' #?site=bns&display=1&collection=bnsitemsuggest&lang=en&callback=suggestKeyword&query=items
+BASE_ITEM_IMAGE_URL = 'http://static.ncsoft.com/bns_resource/ui_resource'
+
+
 
 def _float(var):
     """
@@ -226,6 +236,34 @@ async def fetch_profile(user) -> dict:
     r['Stats'].update(Defense)
     return r
 
+
+async def get_item_name_suggestions(item, display, session):
+    async with session.get(ITEM_NAME_SUGGEST, params={'site': 'bns', 'display': display, 'collection': 'bnsitemsuggest', 'callback': 'suggestKeyword', 'query': item}) as re:
+        data: dict = json.loads((await re.text())[17:-4])
+    if data['result'] != "0":
+        raise ServiceUnavialable
+    return data
+
+
+async def search_item(item, display:int=1):
+    def price_parse(html):
+        soup = BeautifulSoup(html, parser)
+        return [int(x.text.split()[0]) if x is not 0 else 0 for x in [soup.find(name='span', attrs={'class':c}) or 0 for c in ('gold', 'silver', 'bronze')]]
+
+    async def get_item_data(titem, session):
+        async with session.get(f'{MARKET_API_ENDPOINT}/{item}/true') as re:
+            data = await re.json()
+        if (not isinstance(data, list)) or len(data) == 0:
+            raise InvalidData("Market Returned Invalid Data")
+        return {'icon': ''.join([BASE_ITEM_IMAGE_URL, data[0]['iconImg']]),
+                'prices': [(price_parse(e['price_html']), int(e['sale_data']['amount'])) for e in data]}
+
+
+    with aiohttp.ClientSession() as session:
+        data = await get_item_name_suggestions(item, display, session)
+        suggestions = [x[0] for x in data["front"] if len(x) == 2 and x[1] == 0 and isinstance(x[0], str)]
+        return [await get_item_data(item, session) for item in suggestions]
+
 class Character(object):
     """
     Character Object
@@ -267,7 +305,6 @@ class Character(object):
     def __call__(self):
         """returns an awaitable to refresh"""
         return self.refresh()
-
 
 
     def __getattr__(self, item):
