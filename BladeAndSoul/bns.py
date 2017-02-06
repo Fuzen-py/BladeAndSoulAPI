@@ -251,12 +251,13 @@ async def search_item(item, display:int=1):
         return [int(x.text.split()[0]) if x is not 0 else 0 for x in [soup.find(name='span', attrs={'class':c}) or 0 for c in ('gold', 'silver', 'bronze')]]
 
     async def get_item_data(titem, session):
-        async with session.get(f'{MARKET_API_ENDPOINT}/{item}/true') as re:
+        async with session.get(f'{MARKET_API_ENDPOINT}/{titem}/true') as re:
             data = await re.json()
         if (not isinstance(data, list)) or len(data) == 0:
             raise InvalidData("Market Returned Invalid Data")
         return {'icon': ''.join([BASE_ITEM_IMAGE_URL, data[0]['iconImg']]),
-                'prices': [(price_parse(e['price_html']), int(e['sale_data']['amount'])) for e in data]}
+                'prices': [(price_parse(e['price_html']), int(e['sale_data']['amount'])) for e in data],
+                'name': titem}
 
 
     with aiohttp.ClientSession() as session:
