@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='BladeAndSoul.py',
-    version='0.0.2a3',
+    version='0.0.3a1',
     packages=['BladeAndSoul'],
     package_data = {
         'BladeAndSoul': ['data/*']},
@@ -13,7 +13,7 @@ setup(
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
