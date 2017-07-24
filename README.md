@@ -1,4 +1,4 @@
-# Unofficial BladeAndSoul API
+# Unofficial BladeAndSoul API (Discontinued) 
 [![Build Status](https://travis-ci.org/Fuzen-py/BladeAndSoulAPI.svg?branch=Development)](https://travis-ci.org/Fuzen-py/BladeAndSoulAPI)
 
 ---
